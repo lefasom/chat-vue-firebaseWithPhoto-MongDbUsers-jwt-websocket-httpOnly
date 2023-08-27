@@ -1,0 +1,41 @@
+{
+  "name": "vue-aws",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=3000",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@aws-amplify/ui-vue": "^3.1.21",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@vue/reactivity": "^3.3.4",
+    "aws-amplify": "^5.3.5",
+    "axios": "^1.4.0",
+    "crypto-js": "^4.1.1",
+    "firebase": "^10.1.0",
+    "jsonwebtoken": "^9.0.1",
+    "jsrsasign": "^10.8.6",
+    "jws": "^4.0.0",
+    "jwt-simple": "^0.5.6",
+    "node-jose": "^2.2.0",
+    "react-icons": "^4.10.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "uuid": "^9.0.0",
+    "vue": "^3.3.4",
+    "vue-auth-jwt": "^0.4.5",
+    "vue-router": "^4.2.4",
+    "vue-socket.io": "^3.0.10",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "dotenv": "^16.3.1",
+    "vite": "^4.4.5"
+  }
+}
