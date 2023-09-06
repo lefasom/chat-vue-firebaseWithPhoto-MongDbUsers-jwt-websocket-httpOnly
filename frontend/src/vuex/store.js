@@ -110,30 +110,32 @@ const store = createStore({
 
     async setUsuario({ commit }, value) {
       try {
-        const resp = await Axios.post('/getUser', {
+        // const resp = 
+        await Axios.post('/getUser', {
           userName: value.userName,
           password: value.password,
         })
-        console.log(resp)
+    
+        // if (resp) {
+        //   // localStorage.setItem('token', resp.data.token);
+        //   const val = resp.data.user
+        //   // Muestro si los usuarios estan conectados en el servidor => {
+        //   const value = {
+        //     userName: val.userName,
+        //     password: val.password,
+        //     email: val.email,
+        //     photo: val.photo,
+        //     connection: val.connection,
+        //     _id: val._id
+        //   }
+        //   console.log(value)
+        //   await store.dispatch('updateUsuario', value)
+        //   // } <= Muestro si los usuarios estan conectados en el servidor
+        //   commit('SET_USER', value)
+        // commit('SET_CONNECTION')
 
-        if (resp) {
-          localStorage.setItem('token', resp.data.token);
-          const val = resp.data.user
-          // Muestro si los usuarios estan conectados en el servidor => {
-          const value = {
-            userName: val.userName,
-            password: val.password,
-            email: val.email,
-            photo: val.photo,
-            connection: val.connection,
-            _id: val._id
-          }
-          console.log(value)
-          await store.dispatch('updateUsuario', value)
-          // } <= Muestro si los usuarios estan conectados en el servidor
-          commit('SET_USER', value)
-        }
-        return resp
+        // }
+        // return resp
       } catch (error) {
         console.log(error)
       }
@@ -141,13 +143,13 @@ const store = createStore({
 
     async getLogin({ commit }, token) {
 
-      const resp = await Axios.post('/getLogin', { token })
-      if (resp.data !== 'No token') {
-        console.log(resp.data)
-        const value = resp.data.user
-        commit('SET_USER', value)
-        commit('SET_CONNECTION')
-      }
+       await Axios.post('/getLogin', { token:'token' })
+      // if (resp.data !== 'No token') {
+      //   console.log(resp.data)
+      //   const value = resp.data.user
+      //   commit('SET_USER', value)
+      //   commit('SET_CONNECTION')
+      // }
 
     },
     async setDatosUsuario({ commit }, value) {

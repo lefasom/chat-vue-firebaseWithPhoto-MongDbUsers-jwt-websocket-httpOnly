@@ -1,13 +1,13 @@
-const { Router } = require('express');
-const router = Router();
+const { Router } = require('express')
+const router = Router()
 const userController = require('../controllers/userController')
+const cookieParser = require('cookie-parser')
+router.use(cookieParser())
+
 router.post('/postUser', userController.createUser)
 router.get('/getUsers', userController.getUsers)
 router.post('/getUser', userController.getUser)
 router.post('/getLogin', userController.getLogin)
 router.put('/updateUser', userController.updateUser)
-// router.post('/registerOrLogin', userController.createUser)
-// router.put('/logout', userController.logout)
-// router.put('/addFavor', userController.addToFavorites)
 
-module.exports = router;
+module.exports = router
