@@ -21,7 +21,6 @@ export default {
     const usuarios = computed(() => store.state.usuarios)
     const filteredResults = ref([]);
     const search = ref('')
-    const array2 = [{ "id": 1, "grupo": "Lucas Vargas" }, { "id": 2, "grupo": "Mike Huaman" }, { "id": 3, "grupo": "Pedro perez" }, { "id": 4, "grupo": "Franco Echegaray" }, { "id": 5, "grupo": "Ignacio Herrera" }, { "id": 6, "grupo": "Lisandro Tamola" }, { "id": 7, "grupo": "Renzo Perez" }, { "id": 8, "grupo": "Dylan Sombra" }, { "id": 9, "grupo": "Diego Sanfurgo" }, { "id": 10, "grupo": "Jose Lagos" }, { "id": 11, "grupo": "Nicolas Estalles" }, { "id": 12, "grupo": "Eros Silva" }];
     const array = [{ "id": 1, "grupo": "Grupo de motos" }, { "id": 2, "grupo": "Apoyo escolar" }, { "id": 3, "grupo": "Grupo familiar" }, { "id": 4, "grupo": "Parque " }, { "id": 5, "grupo": "Grupo familiar" }, { "id": 6, "grupo": "Facultad" }, { "id": 7, "grupo": "Grupo de motos" }, { "id": 8, "grupo": "Apoyo escolar" }, { "id": 9, "grupo": "Grupo familiar" }, { "id": 10, "grupo": "Parque " }, { "id": 11, "grupo": "Grupo familiar" }, { "id": 12, "grupo": "Facultad" }, { "id": 13, "grupo": "Grupo de motos" }, { "id": 14, "grupo": "Apoyo escolar" }, { "id": 15, "grupo": "Grupo familiar" }, { "id": 16, "grupo": "Parque " }, { "id": 17, "grupo": "Grupo familiar" }, { "id": 18, "grupo": "Facultad" }, { "id": 19, "grupo": "Grupo de motos" }, { "id": 20, "grupo": "Apoyo escolar" }, { "id": 21, "grupo": "Grupo familiar" }, { "id": 22, "grupo": "Parque " }, { "id": 23, "grupo": "Grupo familiar" }, { "id": 24, "grupo": "Facultad" }];
 
     const changeTable = () => {
@@ -35,22 +34,25 @@ export default {
     }
 
 
-
     onMounted(async () => {
-      const token = localStorage.getItem('token')
-        await store.dispatch('getLogin',token)
-     await store.dispatch('getUsuarios')
+      // const token = localStorage.getItem('token')
+      // if (token) {
+        // await store.dispatch('getLogin')
+      // }
+     
+      await store.dispatch('getUsuarios')
       socket.on("updateUser", (data) => {
+  //  console.log('¡f¡', `; ${cookie}`)
+
         // console.log('new log',data)
         store.dispatch('getUsuarios')
       })
     })
- 
+
     return {
       LogoAndMenu,
       modoNocturno,
       array,
-      array2,
       changeTable,
       buscador,
       tabla,

@@ -31,6 +31,7 @@
     "vue-auth-jwt": "^0.4.5",
     "vue-router": "^4.2.4",
     "vue-socket.io": "^3.0.10",
+    "vue3-cookies": "^1.0.6",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
