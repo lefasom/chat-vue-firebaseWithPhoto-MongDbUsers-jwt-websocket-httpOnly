@@ -1,9 +1,13 @@
 // src/store.js
+import { useRouter } from 'vue-router'
+
 import { createStore } from 'vuex'
 import { db } from '../firebase/firebase'
 import { getDocs, collection, doc, deleteDoc, addDoc, updateDoc, getDoc, query, orderBy, onSnapshot } from 'firebase/firestore'
 import Axios from 'axios'
 Axios.defaults.baseURL = "http://localhost:3001"
+const router = useRouter()
+
 const store = createStore({
   state() {
     return {
@@ -19,7 +23,7 @@ const store = createStore({
       },
       id: null,
       usuarios: [],
-      conexion: localStorage.getItem('connection') || false
+      conexion: false
     };
   },
   mutations: {
@@ -51,8 +55,8 @@ const store = createStore({
       state.usuarios = us
     },
 
-    SET_CONNECTION(state) {
-      state.conexion = !state.conexion
+    SET_CONNECTION(state, val) {
+      state.conexion = val.conexion
     },
 
   },
@@ -89,8 +93,9 @@ const store = createStore({
 
     // usuarios
 
-    setConexion({ commit }) {
-      commit('SET_CONNECTION')
+    conexionOff({ commit }) {
+      commit('SET_CONNECTION', { conexion: false })
+
     },
 
     async createUsuario({ commit }, value) {
@@ -110,47 +115,65 @@ const store = createStore({
 
     async setUsuario({ commit }, value) {
       try {
-        // const resp = 
-        await Axios.post('/getUser', {
+        const resp = await Axios.post('/getUser', {
           userName: value.userName,
           password: value.password,
-        })
-    
-        // if (resp) {
-        //   // localStorage.setItem('token', resp.data.token);
-        //   const val = resp.data.user
-        //   // Muestro si los usuarios estan conectados en el servidor => {
-        //   const value = {
-        //     userName: val.userName,
-        //     password: val.password,
-        //     email: val.email,
-        //     photo: val.photo,
-        //     connection: val.connection,
-        //     _id: val._id
-        //   }
-        //   console.log(value)
-        //   await store.dispatch('updateUsuario', value)
-        //   // } <= Muestro si los usuarios estan conectados en el servidor
-        //   commit('SET_USER', value)
-        // commit('SET_CONNECTION')
+        }, {
+          withCredentials: true, // Habilita el envío de cookies
+        });
+        console.log(resp)
+        if (resp) {
+          // localStorage.setItem('token', resp.data.token);
+          const val = resp.data.user
+          // Muestro si los usuarios estan conectados en el servidor => {
+          const value = {
+            userName: val.userName,
+            password: val.password,
+            email: val.email,
+            photo: val.photo,
+            connection: val.connection,
+            _id: val._id
+          }
+          console.log(value)
+          await store.dispatch('updateUsuario', value)
+          // } <= Muestro si los usuarios estan conectados en el servidor
+          commit('SET_USER', value)
+          // commit('SET_CONNECTION')
 
-        // }
-        // return resp
+        }
+        return resp
       } catch (error) {
         console.log(error)
       }
     },
 
-    async getLogin({ commit }, token) {
+    async getLogin({ commit }) {
+      try {
 
-       await Axios.post('/getLogin', { token:'token' })
-      // if (resp.data !== 'No token') {
-      //   console.log(resp.data)
-      //   const value = resp.data.user
-      //   commit('SET_USER', value)
-      //   commit('SET_CONNECTION')
-      // }
+        const resp = await Axios.get('/getLogin', {
+          withCredentials: true, // Habilita el envío de cookies
+        })
+        if (resp) {
+          const val = resp.data.user
+          // Muestro si los usuarios estan conectados en el servidor => {
+          const value = {
+            userName: val.userName,
+            password: val.password,
+            email: val.email,
+            photo: val.photo,
+            connection: !val.connection,
+            _id: val._id
+          }
+          console.log(value)
+          await store.dispatch('updateUsuario', value)
+          // } <= Muestro si los usuarios estan conectados en el servidor
+          commit('SET_USER', value)
+          commit('SET_CONNECTION', { conexion: true })
 
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     async setDatosUsuario({ commit }, value) {
       commit('SET_USER', value)
@@ -167,6 +190,11 @@ const store = createStore({
       }
       console.log('Logout')
       commit('SET_USER', value)
+    },
+    async borrarCook({ commit }) {
+      await Axios.get('borrarCookie', {
+        withCredentials: true, // Habilita el envío de cookies
+      })
     }
   }
 })

@@ -132,9 +132,9 @@ export default {
           localStorage.clear()
        
    
-        
+          store.dispatch('borrarCook') // Centralizo datos del usuario
           store.dispatch('destruirEstado') // Centralizo datos del usuario
-          store.dispatch('setConexion') // Este es para el ui ( habilita y desabilita prestasiones)
+          store.dispatch('conexionOff') // Este es para el ui ( habilita y desabilita prestasiones)
           socket.emit('login', value)
          
           router.push('/')

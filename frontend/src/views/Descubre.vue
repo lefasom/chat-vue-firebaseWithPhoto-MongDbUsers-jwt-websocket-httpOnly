@@ -35,16 +35,11 @@ export default {
 
 
     onMounted(async () => {
-      // const token = localStorage.getItem('token')
-      // if (token) {
-        // await store.dispatch('getLogin')
-      // }
-     
+
+      await store.dispatch('getLogin')
+
       await store.dispatch('getUsuarios')
       socket.on("updateUser", (data) => {
-  //  console.log('¡f¡', `; ${cookie}`)
-
-        // console.log('new log',data)
         store.dispatch('getUsuarios')
       })
     })
