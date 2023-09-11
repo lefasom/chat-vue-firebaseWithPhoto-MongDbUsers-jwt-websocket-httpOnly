@@ -44,25 +44,16 @@ export default {
         const modoNocturno = computed(() => store.state.modoNocturno);
 
         const entrar = async () => {
-            try {
-                const value = {
-                    password: password.value,
-                    userName: userName.value
-                }
-            //  const resp = 
-             store.dispatch('setUsuario', value) // Centralizo datos del usuario
-                // resp.then(resultado => {
-                //     if (resultado) {
-                //         console.log(resultado)
-                //         socket.emit('login')
-                //         router.push('/')
-                //     }
-                // }).catch(error => {
-                //     console.error(error);
-                // })
 
-            } catch (error) {
-                console.log(error)
+            const value = {
+                password: password.value,
+                userName: userName.value
+            }
+            const resp = await store.dispatch('setUsuario', value) // Centralizo datos del usuario
+            console.log(resp)
+            if (resp.status == 200) {
+                socket.emit('login', value)
+                router.push('/')
             }
         }
 
