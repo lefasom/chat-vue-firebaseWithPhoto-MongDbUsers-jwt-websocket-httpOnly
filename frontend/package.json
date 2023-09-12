@@ -26,6 +26,7 @@
     "react-icons": "^4.10.1",
     "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2",
+    "universal-cookie": "^6.1.1",
     "uuid": "^9.0.0",
     "vue": "^3.3.4",
     "vue-auth-jwt": "^0.4.5",

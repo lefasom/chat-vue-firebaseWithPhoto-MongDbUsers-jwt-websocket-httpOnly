@@ -18,14 +18,15 @@
                 <div class="form-group">
                     <label for="">Correo Electronico</label>
                     <input v-model.trim="form.email" type="text" id="email" placeholder="Correo Electronico"
-                        :class="passwordError?'is-invalid':''">
+                        :class="passwordError ? 'is-invalid' : ''">
 
                 </div>
                 <div class="form-group">
                     <label for="">Contraseña</label>
-                    <input :class="passwordError?'is-invalid':''" v-model.trim="form.password" type="password" id="password" placeholder="Contraseña">
+                    <input :class="passwordError ? 'is-invalid' : ''" v-model.trim="form.password" type="password"
+                        id="password" placeholder="Contraseña">
                 </div>
-            
+
                 <div class="form-group">
                     <label for="">Nombre de usuario</label>
                     <input v-model.trim="form.userName" type="text" id="alias" placeholder="Nombre de usuario">
@@ -36,6 +37,9 @@
                 <div v-if="emailError" class="error-message">Ingrese un correo válido</div>
                 <div v-if="passwordError" class="error-message">
                     La contraseña debe tener al menos {{ minPasswordLength }} caracteres
+                </div>
+                <div v-if="response" class="error-message">
+                    {{ resMessage }}
                 </div>
             </form>
         </div>
@@ -59,12 +63,15 @@ export default {
 
     setup() {
         const router = useRouter()
-        const store = useStore();
-        const modoNocturno = computed(() => store.state.modoNocturno);
-        const image = ref('');
-        const passwordError = ref(false);
-        const minPasswordLength = 1;
-        const emailError = ref(false);
+        const store = useStore()
+        const modoNocturno = computed(() => store.state.modoNocturno)
+        const image = ref('')
+        const passwordError = ref(false)
+        const minPasswordLength = 8
+        const emailError = ref(false)
+        const response = ref(false)
+        const resMessage = ref('')
+
 
         const form = ref({
             email: null,
@@ -72,46 +79,54 @@ export default {
             userName: null,
             photo: '',
             connection: false
-        });
+        })
+
         const validateEmail = () => {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            emailError.value = !emailRegex.test(email.value);
-        };
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            emailError.value = !emailRegex.test(email.value)
+        }
+
         const validatePassword = () => {
-            passwordError.value = password.value.length < minPasswordLength;
-        };
+            passwordError.value = password.value.length < minPasswordLength
+        }
 
         const handleFileChange = (event) => {
-            const file = event.target.files[0];
+            const file = event.target.files[0]
             if (file) {
-                const reader = new FileReader();
+                const reader = new FileReader()
 
                 reader.onload = (e) => {
-                    image.value = e.target.result;
+                    image.value = e.target.result
                 };
 
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(file)
                 cargarPhoto(file)
             }
         };
 
         const cargarPhoto = async (file) => {
             const result = await uploadFile(file)
-            // console.log(result)
             form.value.photo = result
         }
-        const registrarse = () => {
-            validateEmail();
-            validatePassword();
-            if (form.value.photo && !passwordError.value && !emailError.value ) {
+
+        const registrarse = async () => {
+            validateEmail()
+            validatePassword()
+            if (form.value.photo && !passwordError.value && !emailError.value) {
                 const value = form.value;
-                store.dispatch('createUsuario', value);
-                router.push('/');
-                console.log("Formulario válido, enviando datos...");
+                const resp = await store.dispatch('createUsuario', value)
+                if (resp.error === true) {
+                    response.value = true
+                    resMessage.value = resp.message
+                } else {
+                    router.push('/');
+                    console.log("Formulario válido, enviando datos...")
+                }
             } else {
-                console.log("Datos invalidos");
+                console.log("Datos invalidos")
             }
         }
+
         return {
             handleFileChange,
             registrarse,
@@ -121,6 +136,8 @@ export default {
             minPasswordLength,
             emailError,
             passwordError,
+            response,
+            resMessage
         }
     }
 }
@@ -128,7 +145,7 @@ export default {
   
 <style scoped>
 .is-invalid {
-    border:1px solid red;
+    border: 1px solid red;
 }
 
 .error-message {

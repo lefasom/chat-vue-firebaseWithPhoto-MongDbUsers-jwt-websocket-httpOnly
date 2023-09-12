@@ -1,12 +1,8 @@
-// src/store.js
-import { useRouter } from 'vue-router'
-
 import { createStore } from 'vuex'
 import { db } from '../firebase/firebase'
 import { getDocs, collection, doc, deleteDoc, addDoc, updateDoc, getDoc, query, orderBy, onSnapshot } from 'firebase/firestore'
 import Axios from 'axios'
 Axios.defaults.baseURL = "http://localhost:3001"
-const router = useRouter()
 
 const store = createStore({
   state() {
@@ -100,6 +96,11 @@ const store = createStore({
 
     async createUsuario({ commit }, value) {
       const resp = await Axios.post('/postUser', value)
+      const err = {
+        error: resp.data.error,
+        message: resp.data.message
+      }
+      return err
     },
 
     async getUsuarios({ commit }) {
@@ -153,7 +154,7 @@ const store = createStore({
         const resp = await Axios.get('/getLogin', {
           withCredentials: true, // Habilita el envío de cookies
         })
-        if (resp) {
+        if (resp.data.message === 'Usuario autenticado') {
           const val = resp.data.user
           // Muestro si los usuarios estan conectados en el servidor => {
           const value = {
@@ -164,12 +165,15 @@ const store = createStore({
             connection: !val.connection,
             _id: val._id
           }
-          console.log(value)
+          console.log(resp.data.message)
+
           await store.dispatch('updateUsuario', value)
           // } <= Muestro si los usuarios estan conectados en el servidor
           commit('SET_USER', value)
           commit('SET_CONNECTION', { conexion: true })
 
+        } else {
+          console.log(resp.data.message)
         }
       } catch (error) {
         console.log(error)
