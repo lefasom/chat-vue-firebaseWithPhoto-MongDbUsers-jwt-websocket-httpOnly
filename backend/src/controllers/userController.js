@@ -9,14 +9,24 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   const { userName, password, email, photo, connection } = req.body
-  try {
-    const newUser = await User.create({ userName, password, email, photo, connection })
-    console.log(newUser)
+  const verUserName = await User.findOne({ userName })
+  const verEmail = await User.findOne({ email })
 
-    res.json(newUser)
-  } catch (error) {
-    console.error(error)
+  if (!verUserName && !verEmail) {
+    try {
+      const newUser = await User.create({ userName, password, email, photo, connection })
+      console.log(newUser)
+
+      res.json({ message: 'Usuario Creado', newUser, error: false })
+    } catch (error) {
+      console.error(error)
+    }
+  } else if (verUserName) {
+    res.json({ message: 'Nombre de usuario ya existe', error: true })
+  } else if (verEmail) {
+    res.json({ message: 'Email ya existe', error: true })
   }
+
 }
 
 const updateUser = async (req, res) => {
@@ -29,7 +39,7 @@ const updateUser = async (req, res) => {
   }
 }
 
- const getUser = async (req, res) => {
+const getUser = async (req, res) => {
   const { userName, password } = req.body
   try {
     const user = await User.findOne({ userName, password })

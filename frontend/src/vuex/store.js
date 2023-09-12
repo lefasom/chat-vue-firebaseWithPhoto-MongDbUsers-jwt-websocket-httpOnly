@@ -96,6 +96,11 @@ const store = createStore({
 
     async createUsuario({ commit }, value) {
       const resp = await Axios.post('/postUser', value)
+      const err = {
+        error: resp.data.error,
+        message: resp.data.message
+      }
+      return err
     },
 
     async getUsuarios({ commit }) {
