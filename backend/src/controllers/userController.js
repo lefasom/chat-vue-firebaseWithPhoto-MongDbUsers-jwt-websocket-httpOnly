@@ -1,6 +1,6 @@
 const User = require('../models/User')
-// const jwt = require('jsonwebtoken')
-// const secretKey = 'tu_clave_secreta' // Cambia esto a una clave secreta segura
+const jwt = require('jsonwebtoken')
+const secretKey = 'tu_clave_secreta' // Cambia esto a una clave secreta segura
 
 const getUsers = async (req, res) => {
   const users = await User.find()
@@ -29,54 +29,59 @@ const updateUser = async (req, res) => {
   }
 }
 
-// const getUser = async (req, res) => {
-//   const { userName, password } = req.body;
-//   try {
-//     const user = await User.findOne({ userName, password });
-//     if (!user) {
-//       return res.status(404).json({ message: 'Usuario no encontrado' });
-//     } else {
-//     console.log('user',user)
+ const getUser = async (req, res) => {
+  const { userName, password } = req.body
+  try {
+    const user = await User.findOne({ userName, password })
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' })
+    } else {
+      const token = jwt.sign({ user }, secretKey, { expiresIn: '1h' })
+      // Calcular la fecha de vencimiento en 15 minutos
+      const currentTime = new Date();
+      const expirationTime = new Date(currentTime.getTime() + 15 * 60 * 1000); // 15 minutos en milisegundos
 
-//       const token = jwt.sign({ user }, secretKey, { expiresIn: '1h' });
-//       // Configura la cookie de autenticación
-//       res.cookie('authToken', token, { secure: false, maxAge: 3600000, httpOnly: true }); // 1 hora de duración
-//       // Puedes enviar una respuesta al cliente si lo deseas
-//       // return res.json({ message: 'Inicio de sesión exitoso', token, user });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: 'Error interno del servidor' });
-//   }
-// }
+      // Configurar la cookie con las opciones adecuadas
+      res.cookie('authToken', token, {
+        expires: expirationTime,
+        httpOnly: true,
+        secure: true, // Asegura que la cookie solo se envíe a través de HTTPS
+        sameSite: 'strict' // Restringe la cookie a solicitudes del mismo sitio
+      })
 
-// const getLogin = async (req, res) => {
-//   // // Recupera la cookie de autenticación
-//   // const authToken = req.cookies.authToken;
+      res.redirect('/getLogin')
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
 
-//   // // Verifica si la cookie está presente
-//   // if (!authToken) {
-//   //   return res.status(401).json({ message: 'No se encontró la cookie de autenticación' });
-//   // }
 
-//   // try {
-//   //   // Verifica y decodifica el token JWT
-//   //   const decodedToken = jwt.verify(authToken, secretKey);
+const getLogin = (req, res) => {
+  const authToken = req.cookies.authToken
+  if (!authToken) {
+    return res.json({ message: 'No hay sesiones guardadas' })
+  }
 
-//   //   // El token es válido, puedes acceder a los datos del usuario
-//   //   const user = decodedToken.user;
+  try {
+    const decodedToken = jwt.verify(authToken, secretKey)
+    const user = decodedToken.user
+    return res.json({ message: 'Usuario autenticado', user })
+  } catch (error) {
+    console.error(error)
+    return res.status(401).json({ message: 'Error al verificar el token de autenticación' })
+  }
+}
 
-//   //   // Continúa con la lógica de autenticación, por ejemplo, enviar los datos del usuario
-//   //   return res.json({ message: 'Usuario autenticado', user });
-//   // } catch (error) {
-//   //   console.error(error);
-//   //   return res.status(401).json({ message: 'Error al verificar el token de autenticación' });
-//   // }
-// };
+const borrarCookie = (req, res) => {
+  res.clearCookie('authToken')
+  res.send('Cookie borrada')
+}
 module.exports = {
   getUsers,
   createUser,
   updateUser,
-  // getUser,
-  // getLogin
+  borrarCookie,
+  getLogin,
+  getUser,
 }

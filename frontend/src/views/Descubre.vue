@@ -3,7 +3,6 @@ import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex';
 import { ref } from 'vue';
 import io from 'socket.io-client'
-
 const socket = io.connect('http://localhost:3002')
 
 import LogoAndMenu from "../components/LogoAndMenu.vue";
