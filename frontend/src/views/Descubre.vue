@@ -62,20 +62,24 @@ export default {
 <template>
   <div :class="modoNocturno ? 'container-nube' : 'container2-nube'">
     <LogoAndMenu />
-    <div class="img">
+    <!-- <div class="img">
       <p>
         ch<font-awesome-icon id="icon" icon="comments" />tea
       </p>
+    </div> -->
+    <div class="consola">
+      <button v-if="tabla" class="button2" @click="changeTable">
+        <font-awesome-icon icon="arrow-right-rotate" />
+        Grupos
+      </button>
+      <button v-if="!tabla" class="button2" @click="changeTable">
+        <font-awesome-icon icon="arrow-right-rotate" />
+        Amigos
+      </button>
+      <input v-model="search" @input="buscador" type="text" placeholder="Buscar palabra clave o id">
+
     </div>
-    <input v-model="search" @input="buscador" type="text" placeholder="Buscar palabra clave o id">
-    <button v-if="tabla" class="button2" @click="changeTable">
-      <font-awesome-icon icon="arrow-right-rotate" />
-      Grupos
-    </button>
-    <button v-if="!tabla" class="button2" @click="changeTable">
-      <font-awesome-icon icon="arrow-right-rotate" />
-      Amigos
-    </button>
+
     <section>
       <div v-if="!tabla" v-for="arra in array" :key="arra.id">
         <article>
@@ -116,6 +120,11 @@ export default {
   </div>
 </template>
 <style scoped>
+.consola{
+  display: flex;
+  align-items: center;
+  
+}
 .img p {
   margin: auto;
   font-size: 88px;
@@ -242,20 +251,23 @@ img {
 }
 
 .container-nube input {
-  margin: 20px auto;
+  margin: 5px auto;
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #999;
-  outline-color: #f8fdff;
+  border: 1px solid #fbfeff;
   background-color: transparent;
   color: #FEFDFC;
+  width: 240px;
+
 
 }
-
+.container-nube input:placeholder {
+  color: #FEFDFC;
+}
 .container-nube section {
   border: 1px solid #0C1D25;
   width: 90%;
-  height: 40vh;
+  height: 70vh;
   margin: auto;
   margin-top: 20px;
   color: #FEFDFC;
@@ -348,38 +360,41 @@ section::-webkit-scrollbar-thumb:hover {
 }
 
 .container2-nube input {
-  margin: 20px auto;
+  margin: 5px auto;
   padding: 10px;
   border-radius: 10px;
   border: 1px solid #999;
   outline-color: #0C1D25;
   background-color: transparent;
   color: #0C1D25;
+  width: 240px;
 
 }
 
 .container2-nube section {
-  border: 1px solid #d5e7f1;
+  border-left: 1px solid #a0a3a4;
+  border-right: 1px solid #a0a3a4;
   width: 90%;
-  height: 40vh;
+  height: 70vh;
   margin: auto;
   margin-top: 20px;
-  color: #0C1D25;
+  color: #FEFDFC;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   overflow: hidden;
   overflow-y: scroll;
+  background-color: #a0a3a4;
 
 }
 
 .container2-nube article {
+  background-color: #fbfeff;
   display: flex;
+  margin-top: 3px;
   align-items: center;
-  padding: 7px;
+  padding: 5px;
 }
 
-.container2-nube article:hover {
-  background-color: #d4e9f4;
-}
+
 
 .container2-nube section #name {
   color: #5f5e5e;

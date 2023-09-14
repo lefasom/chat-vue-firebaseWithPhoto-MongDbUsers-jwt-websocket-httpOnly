@@ -22,7 +22,7 @@
   
 <script>
 import LogoAndMenu from '../components/LogoAndMenu.vue'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 import { uploadFile } from '../firebase/firebase'
@@ -79,7 +79,11 @@ export default {
                 cargarPhoto(file)
             }
         }
-
+        onMounted(async () => {
+            if (form.photo == '') {
+                router.push('/')
+            }
+        })
         return {
             modoNocturno,
             handleFileChange,

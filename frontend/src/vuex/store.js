@@ -110,8 +110,16 @@ const store = createStore({
     },
 
     async updateUsuario({ commit }, value) {// Muestro si los usuarios estan conectados en el servidor
+      const resp = await Axios.put('/updateUser', value, {
+        withCredentials: true, // Habilita el envío de cookies
+      })
+    },
 
-      const resp = await Axios.put('/updateUser', value)
+    async perfilConfig({ commit }, value) {// Muestro si los usuarios estan conectados en el servidor
+      const resp = await Axios.put('/perfilConfig', value, {
+        withCredentials: true, // Habilita el envío de cookies
+      })
+      return resp
     },
 
     async setUsuario({ commit }, value) {
@@ -121,10 +129,8 @@ const store = createStore({
           password: value.password,
         }, {
           withCredentials: true, // Habilita el envío de cookies
-        });
-        console.log(resp)
-        if (resp) {
-          // localStorage.setItem('token', resp.data.token);
+        })
+        if (resp.data.message == 'Usuario autenticado') {
           const val = resp.data.user
           // Muestro si los usuarios estan conectados en el servidor => {
           const value = {
@@ -135,12 +141,8 @@ const store = createStore({
             connection: val.connection,
             _id: val._id
           }
-          console.log(value)
-          await store.dispatch('updateUsuario', value)
           // } <= Muestro si los usuarios estan conectados en el servidor
           commit('SET_USER', value)
-          // commit('SET_CONNECTION')
-
         }
         return resp
       } catch (error) {
@@ -150,10 +152,10 @@ const store = createStore({
 
     async getLogin({ commit }) {
       try {
-
         const resp = await Axios.get('/getLogin', {
           withCredentials: true, // Habilita el envío de cookies
         })
+
         if (resp.data.message === 'Usuario autenticado') {
           const val = resp.data.user
           // Muestro si los usuarios estan conectados en el servidor => {
@@ -165,13 +167,11 @@ const store = createStore({
             connection: !val.connection,
             _id: val._id
           }
-          console.log(resp.data.message)
-
-          await store.dispatch('updateUsuario', value)
           // } <= Muestro si los usuarios estan conectados en el servidor
+
           commit('SET_USER', value)
           commit('SET_CONNECTION', { conexion: true })
-
+          console.log('refresh session')
         } else {
           console.log(resp.data.message)
         }
@@ -179,9 +179,11 @@ const store = createStore({
         console.log(error)
       }
     },
+
     async setDatosUsuario({ commit }, value) {
       commit('SET_USER', value)
     },
+
     async destruirEstado({ commit }) {
       const value =
       {
@@ -195,11 +197,13 @@ const store = createStore({
       console.log('Logout')
       commit('SET_USER', value)
     },
+
     async borrarCook({ commit }) {
       await Axios.get('borrarCookie', {
         withCredentials: true, // Habilita el envío de cookies
       })
     }
+
   }
 })
 

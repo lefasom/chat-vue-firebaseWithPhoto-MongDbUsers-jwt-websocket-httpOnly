@@ -13,6 +13,9 @@
                 </div>
                 <button @click="entrar" type="submit">Entrar</button>
             </form>
+            <div v-if="error" class="error-message">
+                {{ message }}
+            </div>
         </div>
     </div>
 </template>
@@ -39,7 +42,8 @@ export default {
         const router = useRouter()
         const userName = ref('')
         const password = ref('')
-
+        const error = ref(false)
+        const message = ref('')
         const store = useStore();
         const modoNocturno = computed(() => store.state.modoNocturno);
 
@@ -49,14 +53,26 @@ export default {
                 password: password.value,
                 userName: userName.value
             }
+
             const resp = await store.dispatch('setUsuario', value) // Centralizo datos del usuario
-            console.log(resp)
-            if (resp.status == 200) {
+            if (resp.data.message === 'Usuario autenticado') {
+                let value =
+                {
+                    _id: resp.data.user._id,
+                    userName: resp.data.user.userName,
+                    password: resp.data.user.password,
+                    email: resp.data.user.email,
+                    photo: resp.data.user.photo,
+                    connection: true
+                }
+                await store.dispatch('updateUsuario', value)
                 socket.emit('login', value)
                 router.push('/')
+            } else {
+                error.value = true
+                message.value = resp.data.message
             }
         }
-
 
         onMounted(async () => {
             socket.on("updateUser", (data) => {
@@ -68,7 +84,9 @@ export default {
             entrar,
             userName,
             password,
-            modoNocturno
+            modoNocturno,
+            message,
+            error
         }
     }
 }
@@ -76,6 +94,14 @@ export default {
 </script>
   
 <style scoped>
+.error-message {
+    margin-left: 14px;
+    padding-top: 10px;
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
 .router {
     text-decoration: none;
     color: #FEFDFC;

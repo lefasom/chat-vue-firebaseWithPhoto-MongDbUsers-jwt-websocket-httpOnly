@@ -7,14 +7,8 @@ import Amigos from '../views/Amigos.vue'
 import Login from '../views/Login.vue'
 import CreateUser from '../views/CreateUser.vue'
 import Chat from '../views/Chat.vue'
-import Principal from '../views/Principal.vue'
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Principal',
-  //   component: Principal
-  // },
   {
     path: '/',
     name: 'Descubre',
