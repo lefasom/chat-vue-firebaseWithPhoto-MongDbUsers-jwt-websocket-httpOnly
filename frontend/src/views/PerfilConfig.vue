@@ -8,22 +8,29 @@
                     <input v-model="form.email" type="email" id="email" placeholder="Correo Electronico">
                 </div>
                 <div class="form-group">
-                    <label for="">Contraseña</label>
-                    <input v-model="form.password" type="password" id="password" placeholder="Contraseña">
-                </div>
-                <div class="form-group">
                     <label for="">Nombre de usuario</label>
                     <input v-model="form.userName" type="text" id="alias" placeholder="Nombre de usuario">
                 </div>
-                <button @click="editarDatos" type="submit">Editar datos</button>
+                <div class="form-group">
+                    <label for="">Contraseña</label>
+                    <input v-model="form.password" type="password" id="password" placeholder="Contraseña">
+                </div>
+                <button @click="editarDatos" type="submit">Modificar</button>
+                <button @click="editarDatos" type="submit">Cancelar</button>
             </form>
+            <div v-if="error" class="error-message">
+                {{ message }}
+            </div>
+            <div v-if="exito" class="exito-message">
+                {{ message }}
+            </div>
         </div>
     </div>
 </template>
   
 <script>
 import LogoAndMenu from '../components/LogoAndMenu.vue'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -49,26 +56,68 @@ export default {
             email: usuario.value.email
 
         }
+        const vacio = {
+            userName: '',
+            password: '',
+            photo: '',
+            _id: '',
+            email: ''
+        }
+        const error = ref(false)
+        const exito = ref(false)
+        const message = ref('')
 
         const editarDatos = async () => {
             const value = form
-            await store.dispatch('updateUsuario', value)
+
+
+            const resp = await store.dispatch('perfilConfig', value)
             store.dispatch('setDatosUsuario', value)
+            message.value = resp.data.message
+            if (resp.data.message === 'Modificado con exito') {
+                exito.value = true
+                error.value = false
 
-            router.push('/');
+            } else {
+                error.value = true
+                exito.value = false
 
+            }
         }
-      
+        onMounted(async () => {
+            if (form.userName == '') {
+                router.push('/')
+            }
+        })
         return {
             modoNocturno,
             editarDatos,
             form,
+            error,
+            message,
+            exito
         }
     }
 }
 </script>
   
 <style scoped>
+.exito-message {
+    margin-left: 14px;
+    padding-top: 10px;
+    color: green;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.error-message {
+    margin-left: 14px;
+    padding-top: 10px;
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
 .router {
     text-decoration: none;
     color: #FEFDFC;

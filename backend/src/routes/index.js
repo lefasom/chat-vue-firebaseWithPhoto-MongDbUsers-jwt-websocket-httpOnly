@@ -8,5 +8,7 @@ router.get('/borrarCookie', userController.borrarCookie)
 router.post('/getUser', userController.getUser)
 router.get('/getLogin', userController.getLogin)
 router.put('/updateUser', userController.updateUser)
+router.put('/perfilConfig', userController.perfilConfig)
+
 
 module.exports = router

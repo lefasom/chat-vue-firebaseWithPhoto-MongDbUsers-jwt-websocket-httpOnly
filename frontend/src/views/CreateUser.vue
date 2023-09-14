@@ -21,16 +21,18 @@
                         :class="passwordError ? 'is-invalid' : ''">
 
                 </div>
+
+                <div class="form-group">
+                    <label for="">Nombre de usuario</label>
+                    <input v-model.trim="form.userName" type="text" id="alias" placeholder="Nombre de usuario">
+                </div>
+
                 <div class="form-group">
                     <label for="">Contraseña</label>
                     <input :class="passwordError ? 'is-invalid' : ''" v-model.trim="form.password" type="password"
                         id="password" placeholder="Contraseña">
                 </div>
 
-                <div class="form-group">
-                    <label for="">Nombre de usuario</label>
-                    <input v-model.trim="form.userName" type="text" id="alias" placeholder="Nombre de usuario">
-                </div>
                 <div v-if="form.photo != ''">
                     <button type="submit">Registrarse</button>
                 </div>
@@ -112,12 +114,15 @@ export default {
         const registrarse = async () => {
             validateEmail()
             validatePassword()
+         
             if (form.value.photo && !passwordError.value && !emailError.value) {
                 const value = form.value;
                 const resp = await store.dispatch('createUsuario', value)
+             
                 if (resp.error === true) {
                     response.value = true
                     resMessage.value = resp.message
+                    console.log("Datos invalidos")
                 } else {
                     router.push('/');
                     console.log("Formulario válido, enviando datos...")
