@@ -27,8 +27,9 @@ import { computed, onMounted, ref } from 'vue'
 
 import { useStore } from 'vuex'
 import io from 'socket.io-client'
+const socket = io.connect('https://socket-0hvq.onrender.com')
 
-const socket = io.connect('http://localhost:3002')
+// const socket = io.connect('http://localhost:3002')
 
 
 export default {
