@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import { db } from '../firebase/firebase'
 import { getDocs, collection, doc, deleteDoc, addDoc, updateDoc, getDoc, query, orderBy, onSnapshot } from 'firebase/firestore'
 import Axios from 'axios'
-Axios.defaults.baseURL = "https://chatea.onrender.com"
+Axios.defaults.baseURL = "https://chat-153n.onrender.com"
 
 const store = createStore({
   state() {
