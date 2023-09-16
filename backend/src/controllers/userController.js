@@ -80,8 +80,8 @@ const getUser = async (req, res) => {
         res.cookie('authToken', token, {
           expires: expirationTime,
           httpOnly: true,
-          // secure: true, // Asegura que la cookie solo se envíe a través de HTTPS
-          // sameSite: 'strict' // Restringe la cookie a solicitudes del mismo sitio
+          secure: true, // Asegura que la cookie solo se envíe a través de HTTPS
+          sameSite: 'strict' // Restringe la cookie a solicitudes del mismo sitio
         })
 
         res.redirect('/getLogin')
