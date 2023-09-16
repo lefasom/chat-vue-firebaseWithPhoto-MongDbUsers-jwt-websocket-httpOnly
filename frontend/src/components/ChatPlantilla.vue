@@ -4,9 +4,8 @@ import { ref } from 'vue';
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex';
 import SidebarMenu from './SidebarMenu.vue';
-import { serverTimestamp } from 'firebase/firestore';
-import { useRouter } from 'vue-router'
-
+import { collection, getDocs, orderBy, query, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase/firebase';
 export default {
     components: {
         SidebarMenu,
@@ -16,7 +15,6 @@ export default {
 
     setup(props) {
         const store = useStore()
-        const router = useRouter()
 
         const modoNocturno = computed(() => store.state.modoNocturno)
         const mensajes = computed(() => store.state.mensajes);
@@ -104,9 +102,6 @@ export default {
 
         onMounted(async () => {
             await store.dispatch('fetchMensajes')
-            if(usuario.value.userName == ''){
-                router.push('/Login')
-            }
         })
      
         return {
