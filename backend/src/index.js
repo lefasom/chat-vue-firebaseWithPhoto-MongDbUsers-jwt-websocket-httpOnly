@@ -1,5 +1,4 @@
 const app = require('./app.js')
-// const server = require('./socketio.js')
 
 const mongoose = require('mongoose')
 require('dotenv').config()

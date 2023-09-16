@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-var server = app.listen(3002)
+var server = app.listen(3002, () => console.log(`socket.io on port 3002`))
 // Configurar CORS para permitir todas las solicitudes desde cualquier origen
 var io = require('socket.io')(server, {
   cors: {
